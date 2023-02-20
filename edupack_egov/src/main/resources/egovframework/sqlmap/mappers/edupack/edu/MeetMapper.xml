@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edupack.edu.service.mapper.MeetMapper">
+
+ <resultMap id="meetSelectMap" type="meet">
+	<result property="classNo"         column="class_no"       		jdbcType="INTEGER"/>
+	<result property="categNo"         column="categ_no"        	jdbcType="INTEGER"/>
+	<result property="locationNo"      column="location_no"         jdbcType="INTEGER"/>
+	<result property="title"           column="title"         		jdbcType="VARCHAR"/>
+    <result property="intro"     	   column="intro"  				jdbcType="VARCHAR"/>
+	<result property="content"         column="content"             jdbcType="VARCHAR"/>
+	<result property="sumnailImg"      column="sumnail_img"         jdbcType="VARCHAR"/>
+	<result property="personnel"       column="personnel"      	    jdbcType="INTEGER"/>
+	<result property="wishCount"       column="wish_count"          jdbcType="INTEGER"/>
+	<result property="hostId"          column="host_id"             jdbcType="VARCHAR"/>
+	<result property="regDate"         column="reg_date"            jdbcType="DATE"/>
+	
+</resultMap>
+
+<resultMap id="joinClassSelectMap" type="joinClass">
+	<result property="joinClassNo"    column="join_class_no"       jdbcType="INTEGER"/>
+	<result property="userId"         column="user_id"        	   jdbcType="VARCHAR"/>
+	<result property="classNo"        column="class_no"            jdbcType="INTEGER"/>
+	<result property="status"         column="status"         	   jdbcType="INTEGER"/>
+    <result property="regDate"     	  column="reg_date"  		   jdbcType="DATE"/>
+</resultMap>
+
+
+<resultMap id="locationSelectMap" type="location">
+	<result property="locationNo"     column="location_no"      jdbcType="INTEGER"/>
+	<result property="locationName"   column="location_name"    jdbcType="VARCHAR"/>
+</resultMap>
+
+<resultMap id="categSelectMap" type="categ">
+	<result property="categNo"     column="categ_no"      jdbcType="INTEGER"/>
+	<result property="categName"   column="categ_name"    jdbcType="VARCHAR"/>
+</resultMap>
+
+<resultMap id="wishSelectMap" type="wish">
+	<result property="wishNo"     column="wish_no"      jdbcType="INTEGER"/>
+	<result property="classNo"   column="class_no"    jdbcType="INTEGER"/>
+	<result property="userId"   column="user_id"    jdbcType="VARCHAR"/>
+	<result property="wishCheck"   column="wish_check"    jdbcType="INTEGER"/>
+</resultMap>
+
+	<!-- 참가중인 모임(그리드, 모달) -->
+	 <select    id="getJoinClass"   parameterType="String"   resultType="map">
+	SELECT l.location_name, c.title, c.sumnail_img, j.status,j.class_no,'' AS chk,
+					(SELECT COUNT(*) user_id 
+					FROM join_class 
+					WHERE class_no = j.class_no) AS class_user_cnt
+					FROM join_class j, location l, class c
+					WHERE j.class_no = c.class_no
+					AND c.LOCATION_NO = l.LOCATION_NO
+					AND j.user_id = #{userId}
+	 </select>
+	 
+
+	<!-- 찜한 모임 (그리드, 모달) -->
+	<select id = "getWishClass" parameterType="String"   resultType="map">
+	SELECT l.location_name, c.title, c.sumnail_img, w.class_no,'' AS chk,					
+				 CAST(	(SELECT COUNT(*) user_id 
+					FROM join_class 
+					WHERE class_no = w.class_no) AS CHAR)  AS class_user_cnt					
+					FROM wish w, location l, class c
+					WHERE w.class_no = c.class_no
+					AND c.LOCATION_NO = l.LOCATION_NO
+					AND w.user_id = #{userId}
+	 </select>				
+
+
+	 <!-- SQL : 모임 등록 -->
+	 <insert    id="addClass"      parameterType="meet" >
+      INSERT
+      INTO class (class_no, categ_no, location_no, title, intro, content, sumnail_img, personnel, wish_count, host_id, reg_date)
+      VALUES    (   #{classNo : INTEGER},
+      			    #{categNo : INTEGER},
+      			    #{locationNo : INTEGER},
+      			    #{title : VARCHAR},
+      			    #{intro : VARCHAR},
+      			    #{content : VARCHAR},
+      			    #{sumnailImg : VARCHAR},
+      			    #{personnel : INTEGER},
+      			    #{wishCount : INTEGER},
+      			    #{hostId : VARCHAR},
+     			    SYSDATE()   
+      			  )
+    </insert>
+    
+    <!-- SQL : 참가자  등록 (방장, 일반)-->
+     <insert    id="addJoinClass"      parameterType="joinClass" >
+      INSERT
+      INTO join_class(JOIN_CLASS_NO, USER_ID, CLASS_NO, STATUS, REG_DATE)
+      VALUES    (    NULL,
+      			    #{userId : VARCHAR},
+      			    #{classNo : INTEGER},
+      			    #{status : INTEGER},
+     			    SYSDATE()   
+      			  )
+    </insert>
+    
+  <!--모임 참여하기 중복방지 -->
+	<select id="checkJoinClass" parameterType="map"  resultType="integer"> 
+		SELECT COUNT(*) user_id 
+		FROM join_class 
+		WHERE class_no = #{classNo}
+		and user_id = #{userId}
+	</select>
+    
+    
+    <!-- class_no 값 넘어가도록..-->  
+     <select id="getClassNoCnt" resultType="integer"> 
+		SELECT 
+		MAX(class_no)+1 
+		FROM class;
+	</select>	 
+	
+	
+	<!--모임 카테고리별 목록조회  -->
+	<select    id="listClass"   parameterType="map"   resultType="map">
+			SELECT @rownum:=@rownum+1 AS rownum,
+			   a.*
+			  FROM(SELECT c.sumnail_img, l.location_name, c.title, c.intro, c.class_no, ca.categ_name,
+					(SELECT COUNT(*) user_id 
+					FROM join_class 
+					WHERE class_no = c.class_no) AS class_user_cnt
+					FROM  location l, class c, categ ca
+					WHERE c.LOCATION_NO = l.LOCATION_NO	
+					AND c.categ_no = ca.categ_no
+					AND c.categ_no = #{categNo}
+				<if test = 'searchLocation == "0"'> <!-- 전체  -->
+					<if test = 'searchCondition  == "a"'>
+					ORDER BY class_user_cnt DESC
+					</if>
+					<if test = 'searchCondition == "b"'>
+					ORDER BY c.wish_count DESC
+					</if>
+					<if test = 'searchCondition == "c"'>
+					ORDER BY c.reg_date DESC
+					</if>
+				</if>
+				<if test = 'searchLocation != "0"'>
+					and c.location_no = #{locationNo}
+					<if test = 'searchCondition  == "a"'>
+					ORDER BY class_user_cnt DESC
+					</if>
+					<if test = 'searchCondition == "b"'>
+					ORDER BY c.wish_count DESC
+					</if>
+					<if test = 'searchCondition == "c"'>
+					ORDER BY c.reg_date DESC
+					</if>
+				</if>	
+			    	limit #{records} offset #{recordsOffset}) a, 
+			 		(SELECT @rownum:=0) b 
+			 
+    </select>
+    
+    
+    <!-- 모임별 카테고리 검색조건(타이틀, 인트로 내용기준) -->
+    <select    id="listSearchClass"   parameterType="map"   resultType="map">
+			  SELECT @rownum:=@rownum+1 AS rownum,
+			   a.*
+			  FROM(SELECT c.sumnail_img, l.location_name, c.title, c.intro, c.class_no, ca.categ_name,
+					(SELECT COUNT(*) user_id 
+					FROM join_class 
+					WHERE class_no = c.class_no) AS class_user_cnt
+					FROM  class c, 
+						  location l, 	
+						  categ ca
+					WHERE c.LOCATION_NO = l.LOCATION_NO	
+					AND c.categ_no = ca.categ_no		
+					AND (c.title LIKE CONCAT('%',  #{search}, '%') 
+					OR c.intro LIKE CONCAT('%',  #{search},  '%'))
+				<if test = 'searchLocation == "0"'> <!-- 전체  -->
+					<if test = 'searchCondition  == "a"'>
+					ORDER BY class_user_cnt DESC
+					</if>
+					<if test = 'searchCondition == "b"'>
+					ORDER BY c.wish_count DESC
+					</if>
+					<if test = 'searchCondition == "c"'>
+					ORDER BY c.reg_date DESC
+					</if>
+				</if>
+				<if test = 'searchLocation != "0"'>
+					and c.location_no = #{locationNo}
+					<if test = 'searchCondition  == "a"'>
+					ORDER BY class_user_cnt DESC
+					</if>
+					<if test = 'searchCondition == "b"'>
+					ORDER BY c.wish_count DESC
+					</if>
+					<if test = 'searchCondition == "c"'>
+					ORDER BY c.reg_date DESC
+					</if>
+				</if>	
+			    	limit #{records} offset #{recordsOffset}) a, 
+			 		(SELECT @rownum:=0) b 
+    </select>
+    
+   
+	<!-- SQL : 모임 카테고리별 목록(토탈카운트) -->
+	 <select id="listClassTotalcnt" parameterType="map" resultType="map">  
+			SELECT COUNT(*) as totalCount
+			FROM class 
+			WHERE categ_no = #{categNo}
+	</select>	
+	
+	
+	<!-- sql 모임 검색별 목록 (토탈카운트)  -->
+	 <select id="listSearchClassTotalcnt" parameterType="map" resultType="map">  
+			SELECT COUNT(*) as totalCount
+			FROM class 
+			WHERE title LIKE CONCAT('%', #{search}, '%') 
+			OR intro LIKE CONCAT('%', #{search}, '%')
+	</select>
+	
+	
+	<!--모임 상세조회  -->
+	<select id="getClass" parameterType="Integer" resultType="map">
+		SELECT c.host_id, ifnull(u.profile_img,'profile.png') AS profile_img, u.nick, c.class_no, c.sumnail_img, ca.categ_name,
+		l.location_name, c.title, c.wish_count, c.content, c.intro, c.personnel,
+		(SELECT COUNT(*) user_id 
+		FROM join_class 
+		WHERE class_no = c.class_no) AS class_user_cnt
+		FROM class c, location l, user u, categ ca
+		WHERE c.location_no = l.location_no 
+		AND c.host_id = u.user_id
+		AND c.categ_no = ca.categ_no
+		AND c.class_no = #{classNo}
+	</select>	
+	
+	
+	<!-- 모임 참가자 회원 목록조회(그리드)-->
+	<select id="getUserJoinClass" parameterType="Integer" resultType="map">
+		SELECT ifnull(u.profile_img,'profile.png') AS profile_img, u.nick, u.birth, j.status, j.user_id, j.class_no,  c.host_id
+		FROM user u, join_class j, class c 
+		WHERE u.user_id = j.user_id
+		AND c.class_no = j.class_no 
+		AND c.class_no = #{classNo}
+		ORDER BY field(status, 2, 3, 1)
+	</select>
+	
+	
+	<!--모임 찜 개수 증가 -->
+	<update id="updateWishCount" parameterType="int" >
+       UPDATE class
+      <set> 
+       WISH_COUNT = wish_count+1 <!--찜할때마다 1씩 증가 -->
+       </set>
+       WHERE class_no = #{classNo}
+     </update>
+	
+	<!-- 모임 찜 등록  -->
+	 <insert    id="addWish"      parameterType="wish" >
+      INSERT
+      INTO wish(wish_no, class_no, user_id, wish_check)
+      VALUES    (    NULL,
+      			    #{classNo : INTEGER},
+      			    #{userId : VARCHAR},
+      			  	'1'
+      			  )
+    </insert>
+	
+	<!--모임 찜  중복방지-->
+	<select id="checkWishCount" parameterType="map"  resultType="integer"> 
+		SELECT COUNT(*) user_id 
+		FROM wish
+		WHERE class_no = #{classNo}
+		AND user_id = #{userId}
+		AND wish_check = '1'
+	</select>
+    
+	
+	<!--모임 나가기(일반/운영진 기준, 방장은 인원수 5명이상일 떄 안됨... )   -->
+	
+	
+    <!-- SQL : 모임 수정(방장만 가능) -->
+    <update   id="updateClass"   parameterType="map" >
+         UPDATE class
+         <set>
+         sumnail_img = #{sumnail_img},
+         title = #{title},
+         intro = #{intro},
+         content = #{content}
+         </set>
+         WHERE host_id = #{host_id}
+         AND class_no = #{class_no}
+    </update>
+    
+    <!-- SQL : 모임 나가기(일반, 운영진)  -->
+    <delete id="deleteJoinClass" parameterType="map">
+	  DELETE FROM join_class 
+	  WHERE user_id = #{userId}
+	  AND class_no =  #{classNo}
+	</delete>
+	
+	
+ 	<!-- SQL : 모임 삭제(방장만 가능 / 단 회원수 5명 미만일때만)  -->
+ 	 <delete id="deleteClass" parameterType="INTEGER">
+	  DELETE FROM class 
+	  WHERE class_no =  #{class_no}
+	</delete>
+	
+	 <delete id="deleteClassBoard" parameterType="INTEGER">
+	  DELETE FROM board 
+	  WHERE class_no =  #{class_no}
+	</delete>
+ 
+ 	 <delete id="deleteClassJoinClass" parameterType="INTEGER">
+	  DELETE FROM join_class
+	  WHERE class_no =  #{class_no}
+	</delete>
+	
+	 <delete id="deleteClassWish" parameterType="INTEGER">
+	  DELETE FROM wish 
+	  WHERE class_no =  #{class_no}
+	</delete>
+
+ 
+    <!-- SQL : 모임 찜 취소  -->
+    <delete id="deleteWishClass" parameterType="map">
+	  DELETE FROM wish
+	  WHERE class_no =  #{classNo}
+	  AND user_id = #{userId}
+	</delete>
+    
+    
+    <!--모임 찜 취소시 -1  -->
+	<update id="deleteWishCount" parameterType="int" >
+       UPDATE class
+      <set> 
+       WISH_COUNT = wish_count-1 <!--찜 취소 할때마다 -1씩 감소 -->
+       </set>
+       WHERE class_no = #{classNo}
+     </update>
+    
+    <!-- 메인 best모임 회원수 많은순서대로 -->
+    <select id = "getBestClass"    resultType="map"> 
+    SELECT c.sumnail_img, l.location_name, c.title, c.intro, c.class_no,
+					(SELECT COUNT(*) user_id 
+					FROM join_class 
+					WHERE class_no = c.class_no) AS class_user_cnt
+					FROM  class c, 
+						  location l
+					WHERE c.LOCATION_NO = l.LOCATION_NO	
+					ORDER BY class_user_cnt DESC 
+					LIMIT 4
+    </select>
+	
+	<!--  메인 신규모임 regdate 최신순으로 -->
+	<select id = "getNewClass"  resultType="map"> 
+	SELECT c.sumnail_img, l.location_name, c.title, c.intro, c.class_no, c.reg_date,
+					(SELECT COUNT(*) user_id 
+					FROM join_class 
+					WHERE class_no = c.class_no) AS class_user_cnt
+					FROM  class c, 
+						  location l
+					WHERE c.LOCATION_NO = l.LOCATION_NO	
+					ORDER BY c.reg_date desc 
+					LIMIT 4	
+	</select>
+	
+	
+	<!-- 관심지역 추천 모임  -->
+	<select id = "getLocationClass"   parameterType="INTEGER" resultType="map"> 
+	SELECT c.sumnail_img, l.location_name, c.title, c.intro, c.class_no, c.reg_date,
+				(SELECT COUNT(*) user_id 
+				FROM join_class 
+				WHERE class_no = c.class_no) AS class_user_cnt
+				FROM  class c, location l, user u 
+				WHERE c.location_no = u.location_no
+				AND c.location_no = l.location_no 
+				AND u.location_no = #{location_no}
+				GROUP BY c.class_no
+				ORDER BY class_user_cnt DESC
+				LIMIT 4
+	</select>
+	
+
+	<!-- 모임의 방장인지 확인 -->
+	<select id = "getHostId" parameterType="map"  resultType="map"> 
+	SELECT status 
+	FROM join_class 
+	WHERE class_no = #{class_no} 
+	and user_id = #{user_id} 
+	</select>
+	
+	<!-- 모임장 양도 -->	
+	 <update   id="updateHostClass"   parameterType="map" >
+         UPDATE class
+          set
+          host_id = #{user_id}
+       	WHERE class_no = #{class_no}
+    </update>   
+	
+    <update   id="updateJoinClassHostStatus"   parameterType="map" > <!--모임장에서 다시 일반회원으로(1) 양도로변경  --> 
+         UPDATE join_class
+        set
+          status = 1
+      	 WHERE user_id = #{host_id}
+       	AND class_no = #{class_no}
+    </update>
+    
+      <update   id="updateJoinClassStatus"   parameterType="map" > <!--모임장 임명(2로변경), 운영진 임명(3) 운영진 해제(1로변경)..!-->  
+         UPDATE join_class
+        set
+          status = #{status}
+      	 WHERE user_id = #{user_id}
+       	AND class_no = #{class_no}
+    </update>
+    
+    
+    <!-- 내가 받은 메세지 보기 -->
+ 	<select id = "getClassMsg"   parameterType="String" resultType="map"> 
+	SELECT
+		CAST(SUBSTRING(A.TOPIC_ID,2) AS UNSIGNED) AS ID,
+		SUBSTRING(A.MESSAGE_BODY,20) AS MSG,
+		B.USER_ID,
+		SUBSTRING(A.REGISTER_DATE, 1, 8) AS DATE, 
+		SUBSTRING(B.CHECK_DATE, 1, 8) AS CHECK_DATE,
+		C.TITLE
+	FROM T_MESSAGE A,
+	     T_USER_MESSAGE B, 
+	     CLASS C
+ 	WHERE A.MESSAGE_ID = B.MESSAGE_ID
+   	AND  B.USER_ID = #{userId}
+   	AND C.CLASS_NO = CAST(SUBSTRING(A.TOPIC_ID,2) AS UNSIGNED) 
+ 	ORDER BY B.CHECK_DATE DESC
+	</select>
+ 
+
+    
+    
+</mapper>

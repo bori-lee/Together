@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="PopupDiv01" width="1038" height="630" titletext="New Form">
+    <Layouts>
+      <Layout height="630" mobileorientation="landscape" width="1038">
+        <PopupDiv id="pdiv00" text="pdiv00" visible="false" left="564" top="16" width="380" height="240" background="antiquewhite">
+          <Layouts>
+            <Layout>
+              <Grid id="grd00" taborder="0" left="28" top="13" width="321" height="159" binddataset="Dataset1">
+                <Formats>
+                  <Format id="default">
+                    <Columns>
+                      <Column size="80"/>
+                      <Column size="80"/>
+                      <Column size="80"/>
+                    </Columns>
+                    <Rows>
+                      <Row band="head" size="24"/>
+                      <Row size="24"/>
+                    </Rows>
+                    <Band id="head">
+                      <Cell text="DEPT_NAME"/>
+                      <Cell col="1" text="FULL_NAME"/>
+                      <Cell col="2" text="EMPL_ID"/>
+                    </Band>
+                    <Band id="body">
+                      <Cell text="bind:DEPT_NAME"/>
+                      <Cell col="1" text="bind:FULL_NAME"/>
+                      <Cell col="2" text="bind:EMPL_ID"/>
+                    </Band>
+                  </Format>
+                </Formats>
+              </Grid>
+              <Button id="btn00" taborder="1" text="btn00" left="85" top="192" width="207" height="40" onclick="pdiv00_btn00_onclick"/>
+            </Layout>
+          </Layouts>
+        </PopupDiv>
+        <PopupDiv id="pdiv01" text="" visible="false" left="580" top="290" width="376" height="260" background="antiquewhite" url="EduBasic::User/PopupDiv01_Sub.xfdl"/>
+        <Button id="btn00" taborder="0" text="1_1" left="20" top="58" width="111" height="44" onclick="btn00_onclick"/>
+        <Static id="sta00" taborder="1" text="Contents로 구성된 PopupDiv1을 버튼 하단에 오픈." left="20" top="18" width="340" height="32"/>
+        <Edit id="edt_dept" taborder="2" left="141" top="60" width="85" height="33"/>
+        <Edit id="edt_empl_id" taborder="3" left="233" top="61" width="91" height="32"/>
+        <Button id="btn01" taborder="4" text="1_2" left="20" top="143" width="108" height="37" onclick="btn01_onclick"/>
+        <Static id="sta00_00" taborder="5" text="url으로 구성된 PopupDiv2을 버튼 하단에 오픈" left="20" top="112" width="340" height="32"/>
+        <Edit id="edt_dept2" taborder="6" left="138" top="147" width="85" height="33" onchanged="edt_dept00_onchanged"/>
+        <Edit id="edt_empl_id2" taborder="7" left="239" top="144" width="91" height="32"/>
+        <PopupDiv id="pdiv02" text="pdiv02" visible="false" left="9" top="340" width="531" height="250" oncloseup="pdiv02_oncloseup">
+          <Layouts>
+            <Layout>
+              <Calendar id="cal_from" taborder="0" left="-9" top="4" width="260" height="157" type="monthonly"/>
+              <Calendar id="cal_to" taborder="1" left="260" top="5" width="271" height="157" type="monthonly"/>
+              <Button id="btn00" taborder="2" text="ok" left="41" top="168" width="176" height="40" onclick="pdiv02_btn00_onclick"/>
+              <Button id="btn01" taborder="3" text="cancel" left="298" top="168" width="163" height="36" onclick="pdiv02_btn01_onclick"/>
+            </Layout>
+          </Layouts>
+        </PopupDiv>
+        <Calendar id="cal_from" taborder="8" left="30" top="282" width="180" height="33" popuptype="none" ondropdown="cal_from_ondropdown" value="20220901" onchanged="cal_from_onchanged"/>
+        <Calendar id="cal_to" taborder="9" left="270" top="279" width="222" height="36" popuptype="none" ondropdown="cal_from_ondropdown" value="20220922"/>
+        <Static id="sta01" taborder="10" text="기간달력" left="45" top="248" width="277" height="17"/>
+        <Static id="sta02" taborder="11" text="~" left="235" top="285" width="32" height="27"/>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <Dataset id="Dataset1">
+        <ColumnInfo>
+          <Column id="DEPT_NAME" type="STRING" size="256"/>
+          <Column id="FULL_NAME" type="STRING" size="256"/>
+          <Column id="EMPL_ID" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="DEPT_NAME">Education</Col>
+            <Col id="FULL_NAME">John </Col>
+            <Col id="EMPL_ID">KR101</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Education</Col>
+            <Col id="FULL_NAME">Jackson</Col>
+            <Col id="EMPL_ID">KR102</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Education</Col>
+            <Col id="FULL_NAME">Adam</Col>
+            <Col id="EMPL_ID">KR103</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Education</Col>
+            <Col id="FULL_NAME">Melon</Col>
+            <Col id="EMPL_ID">KR104</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Education</Col>
+            <Col id="FULL_NAME">Kate </Col>
+            <Col id="EMPL_ID">KR105</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Sales</Col>
+            <Col id="FULL_NAME">Bts</Col>
+            <Col id="EMPL_ID">KR106</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Sales</Col>
+            <Col id="FULL_NAME">Andrew </Col>
+            <Col id="EMPL_ID">KR107</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Sales</Col>
+            <Col id="FULL_NAME">Belle</Col>
+            <Col id="EMPL_ID">KR108</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Sales</Col>
+            <Col id="FULL_NAME">Elsa</Col>
+            <Col id="EMPL_ID">KR109</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Marketing</Col>
+            <Col id="FULL_NAME">Kein </Col>
+            <Col id="EMPL_ID">KR110</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Marketing</Col>
+            <Col id="FULL_NAME">Ivy</Col>
+            <Col id="EMPL_ID">KR111</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Marketing</Col>
+            <Col id="FULL_NAME">Kara</Col>
+            <Col id="EMPL_ID">KR112</Col>
+          </Row>
+          <Row>
+            <Col id="DEPT_NAME">Marketing</Col>
+            <Col id="FULL_NAME">Twice</Col>
+            <Col id="EMPL_ID">KR113</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var nX = 0; //parseInt(0); // var nX = 0; 이렇게도 가능 
+	var nY = obj.height; //parseInt(0);
+	this.pdiv00.trackPopupByComponent(obj,nX, nY); // 컴포넌트를 기준으로 PopupDiv 컴포넌트의 위치를 지정합니다.
+	//넓이, 높이 
+};
+
+this.pdiv00_btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sDept = this.Dataset1.getColumn(this.Dataset1.rowposition, "DEPT_NAME");
+	var sName = this.Dataset1.getColumn(this.Dataset1.rowposition, "FULL_NAME");
+	this.edt_dept.set_value(sDept);
+	this.edt_empl_id.set_value(sName);
+	this.pdiv00.closePopup(); // 메소드로 닫히는 방법. 
+};
+
+
+this.btn01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var nX = 0; //parseInt(0); // var nX = 0; 이렇게도 가능 
+	var nY = obj.height; //parseInt(0);
+	this.pdiv01.trackPopupByComponent(obj, 
+									nX, 
+								    nY, 
+									null, // 내가 디자인한 사이즈만큼. 넓이 
+									null, // 높이 F1 에서 확인가능 
+									"fn_pDivCallback"); // 언제닫힐지 모르니까 callback이라는 함수를 통해서 리턴받는다. 
+};
+
+this.fn_pDivCallback = function(objID, rtnValue)
+{
+	
+	if(rtnValue == "")
+	{
+		return;
+	}
+	if(objID == "pdiv01")
+	{
+		this.edt_dept2.set_value(rtnValue[0]);
+		this.edt_empl_id2.set_value(rtnValue[1]);
+		
+	}
+}
+
+this.cal_from_ondropdown = function(obj:nexacro.Calendar,e:nexacro.EventInfo)
+{
+	var nX = 0; //parseInt(0); // var nX = 0; 이렇게도 가능 
+	var nY = obj.height; //parseInt(0);
+	
+	var sFrom = this.cal_from.value;
+	var sTo = this.cal_to.value;
+	this.pdiv02.form.cal_from.set_value(sFrom);
+	this.pdiv02.form.cal_to.set_value(sTo);
+	
+	this.pdiv02.trackPopupByComponent(obj,nX, nY); // 컴포넌트를 기준으로 PopupDiv 컴포넌트의 위치를 지정합니다.
+	//넓이, 높이 
+	
+};
+
+this.pdiv02_btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sFrom = this.pdiv02.form.cal_from.value;
+	var sTo = this.pdiv02.form.cal_to.value;
+	
+	this.cal_from.set_value(sFrom);
+	this.cal_to.set_value(sTo);
+	this.pdiv02.closePopup();
+	
+};
+
+//처음날짜가 더 높을때 오류메세지 출력 
+this.pdiv02_oncloseup = function(obj:nexacro.PopupDiv,e:nexacro.EventInfo)
+{
+	if(this.cal_from.value > this.cal_to.value)
+	{
+		alert("to 날짜가 같거나 커야 합니다");
+		this.cal_to.set_value(""); // 뒤에꺼 초기화 
+	}
+};
+
+this.pdiv02_btn01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.pdiv02.closePopup(); // 닫히는거 
+};
+
+]]></Script>
+  </Form>
+</FDL>

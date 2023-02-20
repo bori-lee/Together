@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Common" width="1038" height="560" titletext="New Form">
+    <Layouts>
+      <Layout height="560" mobileorientation="landscape" width="1038">
+        <Button id="btn00" taborder="0" text="btn00" left="140" top="10" height="50" onclick="btn00_onclick" right="788"/>
+        <Button id="btn01" taborder="1" text="btn01" left="btn00:20" top="15" width="93" height="35" onclick="btn01_onclick"/>
+        <Static id="sta00" taborder="2" text="sta00" left="68" top="80" width="32" height="15"/>
+        <Button id="btn02" taborder="3" text="컴포넌트 생성 " left="156" top="74" width="89" height="33" onclick="btn02_onclick"/>
+        <Button id="btn03" taborder="4" text="컴포넌트 삭제" left="btn02:21" top="70" width="88" height="35" onclick="btn03_onclick"/>
+        <Div id="div00" taborder="5" text="div00" left="166" top="140" width="408" height="112" background="antiquewhite"/>
+        <Button id="btn04" taborder="6" text="Div 컴포넌트 생성" left="6" top="159" width="114" height="40" onclick="btn04_onclick"/>
+        <Button id="btn05" taborder="7" text="Div 컴포넌트 삭제" left="8" top="209" width="114" height="36" onclick="btn05_onclick"/>
+        <Button id="btn06" taborder="8" text="tab 컴포넌트 생성 " left="12" top="262" width="128" height="50" onclick="btn06_onclick"/>
+        <Button id="btn07" taborder="9" text="tab 컴포넌트 삭제" left="16" top="330" width="120" height="58" onclick="btn07_onclick"/>
+        <Tab id="tab00" taborder="10" tabindex="0" left="195" top="269" width="371" height="119">
+          <Tabpages>
+            <Tabpage id="Tabpage1" text="Tabpage1">
+              <Layouts>
+                <Layout/>
+              </Layouts>
+            </Tabpage>
+            <Tabpage id="Tabpage2" text="Tabpage2"/>
+          </Tabpages>
+        </Tab>
+        <Button id="btn08" taborder="11" text="Event 추가" left="20" top="405" width="116" height="39" onclick="btn08_onclick"/>
+        <Button id="btn09" taborder="12" text="바인딩" left="619" top="57" width="71" height="33" onclick="btn09_onclick"/>
+        <Edit id="edt_bind" taborder="13" left="696" top="60" width="136" height="28"/>
+        <Grid id="grd00" taborder="14" left="630" top="105" width="260" height="130" binddataset="ds00">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="COL_NAME"/>
+                <Cell col="1" text="COL_SIZE"/>
+                <Cell col="2" text="COL_COLOR"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:COL_NAME"/>
+                <Cell col="1" text="bind:COL_SIZE"/>
+                <Cell col="2" text="bind:COL_COLOR"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Button id="btn10" taborder="15" text="btn10" left="425" top="18" width="97" height="32" onclick="btn10_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	trace("getoffsetWidth : " + obj.getOffsetWidth()); //계산할때는 offset으로 시작하는 메소드를 쓴다. 넓이를 지웠을때 픽셀의 값은 안나옴 
+	trace("getPixelWidth : " + obj.getPixelWidth());
+};
+
+
+//버튼을 눌렀을 때 컴포넌트 생성 
+this.btn02_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objBtn = new Button();  //내가 만들려고하는 오브젝트, 그리드를 만들고싶으면 new grid(); 콤보도 마찬가지로 표현.. 
+	objBtn.init("btn_Comp", 320, 380, 150, 100); // 컴포넌트에 대한 초기값, (아이디, left, top, width, height) 
+	this.addChild("btn_Comp", objBtn); // 생성했는데 화면에다가 붙여주는 것
+	objBtn.set_text("Create Button");  // 생성한 것에 텍스트 
+	objBtn.set_background("skyblue");  // 배경색깔 
+	objBtn.show();  // 화면에보여줄려고 하는 메소드 show 
+
+};
+
+this.btn03_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objBtn = this.removeChild("btn_Comp"); // Form에 동적으로 추가된 컴포넌트를 제거하는 메소드
+	objBtn.destroy(); //destroy와 null까지해줘야 메모리까지 삭제, 한번더 초기화 (그래서 쌍으로 둘다 써주기) 
+	objBtn = null;
+};
+
+//div안에 넣고싶다면.,. 
+this.btn04_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objBtn = new Button();  //내가 만들려고하는 오브젝트, 그리드를 만들고싶으면 new grid(); 콤보도 마찬가지로 표현.. 
+	objBtn.init("btn_DivComp", 10, 10, 150, 100); // 컴포넌트에 대한 초기값, (아이디, left, top, width, height) 
+	this.div00.form.addChild("btn_DivComp", objBtn); // 생성했는데 화면에다가 붙여주는 것
+	objBtn.set_text("Create Button");  // 생성한 것에 텍스트 
+	objBtn.set_background("skyblue");  // 배경색깔 
+	objBtn.show();  // 화면에보여줄려고 하는 메소드 show 
+		
+};
+
+this.btn05_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+
+	var objBtn = this.div00.form.removeChild("btn_DivComp"); // Form에 동적으로 추가된 컴포넌트를 제거하는 메소드
+	objBtn.destroy(); //destroy와 null까지해줘야 메모리까지 삭제, 한번더 초기화 (그래서 쌍으로 둘다 써주기) 
+	objBtn = null;
+	
+};
+
+//tab00.Tabpage1.form.btn00
+
+this.btn06_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objBtn = new Button();  //내가 만들려고하는 오브젝트, 그리드를 만들고싶으면 new grid(); 콤보도 마찬가지로 표현.. 
+	objBtn.init("btn_tabComp", 10, 10, 150, 100); // 컴포넌트에 대한 초기값, (아이디, left, top, width, height) 
+	this.tab00.Tabpage1.form.addChild("btn_tabComp", objBtn); // 생성했는데 화면에다가 붙여주는 것
+	objBtn.set_text("Create Button");  // 생성한 것에 텍스트 
+	objBtn.set_background("skyblue");  // 배경색깔 
+	objBtn.show();  // 화면에보여줄려고 하는 메소드 show 
+	
+};
+
+this.btn07_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objBtn = this.tab00.Tabpage1.form.removeChild("btn_tabComp"); // Form에 동적으로 추가된 컴포넌트를 제거하는 메소드
+	objBtn.destroy(); //destroy와 null까지해줘야 메모리까지 삭제, 한번더 초기화 (그래서 쌍으로 둘다 써주기) 
+	objBtn = null;
+};
+
+
+this.btn08_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.btn_Comp.addEventHandler("onclick", this.fn_temp,this); // 이벤트추가 버튼 누르면 밑에 이벤트 trace 디버깅됨 
+	
+};
+this.fn_temp = function()
+{
+	trace("event");
+}
+
+
+
+this.btn09_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	//BindItem : 컴포넌트의 특정 속성과 데이터셋의 데이터를 바인딩하기 위해 사용하는 오브젝트
+	var objBindItem = new BindItem(); 
+	objBindItem.init("item00", "edt_bind", "value", "ds00", "COL_NAME"); //아이디, 
+	this.addChild("item00", objBindItem); 
+	objBindItem.bind();
+	
+	var objBindItem = new BindItem(); 
+	objBindItem.init("item01", "edt_bind", "width", "ds00", "COL_SIZE"); //아이디, 
+	this.addChild("item01", objBindItem); 
+	objBindItem.bind();
+	
+	var objBindItem = new BindItem(); 
+	objBindItem.init("item02", "edt_bind", "background", "ds00", "COL_COLOR"); //아이디, 
+	this.addChild("item02", objBindItem); 
+	objBindItem.bind();
+	
+};
+
+this.btn10_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var m = moment(); 
+	trace(m.year());
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds00">
+        <ColumnInfo>
+          <Column id="COL_NAME" type="STRING" size="256"/>
+          <Column id="COL_SIZE" type="STRING" size="256"/>
+          <Column id="COL_COLOR" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="COL_NAME">이순신 </Col>
+            <Col id="COL_SIZE">200</Col>
+            <Col id="COL_COLOR">gold</Col>
+          </Row>
+          <Row>
+            <Col id="COL_NAME">유관순</Col>
+            <Col id="COL_SIZE">300</Col>
+            <Col id="COL_COLOR">pink</Col>
+          </Row>
+          <Row>
+            <Col id="COL_NAME">세종대왕</Col>
+            <Col id="COL_COLOR">yellow</Col>
+            <Col id="COL_SIZE">100</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="ds01"/>
+    </Objects>
+  </Form>
+</FDL>

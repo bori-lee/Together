@@ -1,0 +1,91 @@
+﻿{
+    "version" : "21.0.0.1",
+    "runtime" :
+    {
+        "target" :
+        {
+            "os" : "windows"
+        },
+        "framework" :
+        [    
+        "./nexacrolib/framework/Framework.js"
+        ],
+        "component" :
+        [    
+        "./nexacrolib/component/CompBase.js",
+        "./nexacrolib/component/ComComp.js",
+        "./nexacrolib/component/Grid.js",
+        "./nexacrolib/component/ListView.js",
+        "./nexacrolib/component/DeviceAPI.js",
+        "./nexacrolib/component/ExtJs/EduCommon.js",
+        "./nexacrolib/component/ExtJs/ExtFrame.js",
+        "./nexacrolib/component/ExtJs/ExtUtil.js",
+        "./nexacrolib/component/ExtJs/ExtTransaction.js",
+        "./nexacrolib/component/ExtJs/ExtValidation.js",
+        "./nexacrolib/component/ExtJs/ExtPopup.js",
+        "./nexacrolib/component/ExtJs/ExtMultiLanguage.js",
+        "./nexacrolib/component/ExtJs/ExtFile.js",
+        "./nexacrolib/component/ExtJs/ExtMessage.js",
+        "./nexacrolib/component/ExtJs/ExtGrid.js",
+        "./nexacrolib/component/ExtJs/ExtExcel.js",
+        "./nexacrolib/component/ExtJs/ExtComp.js",
+        "./nexacrolib/component/ExtJs/ExtPivotGrid.js",
+        "./nexacrolib/component/ExtJs/ExtrMateChartH5.js",
+        "./nexacrolib/component/rMateChartH5/JS/editablegrid-2.0.1.js",
+        "./nexacrolib/component/rMateChartH5/JS/rMateChartH5.js",
+        "./nexacrolib/component/rMateChartH5/LicenseKey/rMateChartH5License.js",
+        "./nexacrolib/component/UbiReport4/UbiReport4.js",
+        "./nexacrolib/component/UbiReport4/ubihtml.js",
+        "./nexacrolib/component/UbiReport4/ubiexcanvas.js",
+        "./nexacrolib/component/UbiReport4/ubinonax.js",
+        "./nexacrolib/component/UbiReport4/msg.js",
+        "./nexacrolib/component/Push.js",
+        "./nexacrolib/component/History/History.js",
+        "./nexacrolib/component/ExtJs_Together/ExtUtil_Together.js",
+        "./nexacrolib/component/ExtJs_Together/ExtTransaction_Together.js",
+        "./nexacrolib/component/ExtJs_Together/ExtPopup_Together.js",
+        "./nexacrolib/component/ExtJs_Together/ExtMessage_Together.js",
+        "./nexacrolib/component/ExtJs_Together/ExtFrame_Together.js",
+        "./nexacrolib/component/ExtJs_Together/ExtExcel_Together.js"
+        ],
+        "environment" :
+        [    
+        {
+        "file":"./environment.xml.js"
+        }
+        ],
+        "screen" :
+        [    
+        {"id":"Desktop_screen","type":"desktop","loadingimage":"url('theme://images/loadingImg1.gif')","themeid":"theme::edupack_nexacro"}
+        ],
+        "xadl" :
+        [
+        {
+        	"screenid":"Desktop_screen",
+        	"launch":"./Application_Desktop.xadl.js",
+        	"quickview":"./Application_Desktop.xadl.quickview.js",
+        	"form":[
+        				"./Frame/Top.xfdl.js",
+        		"./Frame/Main.xfdl.js"
+        	]
+        }
+        ],  
+        "protocol" :
+        {
+            "adaptors" :
+            []
+        },
+        "resource" :
+        {
+
+        },
+		"deploy" :
+        {
+
+        },
+        "userfont" :
+        [
+
+        ]
+    }
+}

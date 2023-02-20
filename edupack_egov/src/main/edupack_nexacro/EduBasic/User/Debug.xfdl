@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Debug" width="1280" height="720" titletext="New Form">
+    <Layouts>
+      <Layout height="720" width="1280">
+        <Button id="btn00" taborder="0" text="alert" left="48" top="16" width="89" height="60" onclick="btn00_onclick"/>
+        <Button id="btn01" taborder="1" text="trace" left="50" top="100" width="108" height="40" onclick="btn01_onclick"/>
+        <Button id="btn02" taborder="2" text="column 0 변경" left="56" top="160" width="112" height="50" onclick="btn02_onclick"/>
+        <Button id="btn03" taborder="3" text="console" left="68" top="228" width="128" height="77" onclick="btn03_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sName = "TOBESOFT";
+	var sName2 = "TOBESOFT2";
+	alert(sName);
+};
+
+this.btn01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sName = "TOBESOFT";
+	for(var i=0; i<10; i++)
+	{
+		trace(sName);
+	}
+};
+
+this.ds00_cancolumnchange = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
+{
+	trace("cancolumnchange"); 
+	
+};
+
+this.ds00_oncolumnchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
+{
+	trace("oncolumnchanged");
+};
+
+this.btn02_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.ds00.setColumn(0, "Column0", "mod");
+	this.ds00.setColumn(1, "Column0", "mod");
+};
+
+this.btn03_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	console.log("test"); 
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds00" cancolumnchange="ds00_cancolumnchange" oncolumnchanged="ds00_oncolumnchanged">
+        <ColumnInfo>
+          <Column id="Column0" type="STRING" size="256"/>
+          <Column id="Column1" type="STRING" size="256"/>
+          <Column id="Column2" type="STRING" size="256"/>
+          <Column id="Column3" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row/>
+          <Row/>
+        </Rows>
+      </Dataset>
+    </Objects>
+  </Form>
+</FDL>

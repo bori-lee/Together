@@ -1,0 +1,14 @@
+{
+	"name": "ExtJs_Together",
+	"version": "1.0.0.0",
+	"description": "Library for Nexacro",
+	"license": "",
+	"scripts": [    
+        "ExtJs_Together/ExtUtil_Together.js",
+        "ExtJs_Together/ExtTransaction_Together.js",
+        "ExtJs_Together/ExtPopup_Together.js",
+        "ExtJs_Together/ExtMessage_Together.js",
+        "ExtJs_Together/ExtFrame_Together.js", 
+        "ExtJs_Together/ExtExcel_Together.js"
+	]
+}

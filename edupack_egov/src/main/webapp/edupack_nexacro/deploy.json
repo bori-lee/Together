@@ -1,0 +1,59 @@
+﻿{
+	"SetupManager" : {
+		"updatetype" : "server",
+		"outputpath" : "C:\\Users\\tobesoft\\Documents\\TOBESOFT\\Nexacro N\\deploy\\edupack_nexacro\\_windows_",
+		"externalsetupresource" : "True",
+		"resourcepath" : "C:\\Users\\tobesoft\\Documents\\TOBESOFT\\Nexacro N\\deploy\\edupack_nexacro\\_windows_",
+		"bootstrapjson" : "http://localhost:8088/edupack_egov/edupack_nexacro/start.json",
+		"programname" : "edupack_nexacro",
+		"installlocation" : "TOBESOFT\\Nexacro N\\21\\edupack_nexacro\\",
+		"updatebrowser" : "true",
+		"applicationkey" : "edupack_nexacro",
+		"installmode" : "Default",
+		"autoupdate" : "Auto",
+		"shortcutinstalltype" : "Select at Install time",
+		"splashshowmessage" : "Default",
+		"Windows_x86" : {
+			"setupfilename" : "EduNexacroN_SetupRuntime_x86",
+			"enginesetupkey" : "05B0E4B2-C781-41C2-8F9A-96FAF86090F9",
+			"setupversion" : "21.0.0.1100",
+			"originalfile" : "C:\\Program Files (x86)\\TOBESOFT\\Nexacro N\\SDK\\21.0.0\\SetupRuntime\\NexacroN_SetupRuntime_x86.exe",
+			"SetupRuntime_x86" : "True"
+		},
+		"Windows_x64" : {
+			"setupfilename" : "EduNexacroN_SetupRuntime_x64",
+			"enginesetupkey" : "CB5F4CC9-D12B-47B5-8E8F-5DD7680A5D76",
+			"setupversion" : "21.0.0.1100",
+			"originalfile" : "C:\\Program Files (x86)\\TOBESOFT\\Nexacro N\\SDK\\21.0.0\\SetupRuntime\\NexacroN_SetupRuntime_x64.exe",
+			"SetupRuntime_x64" : "True"
+		},
+		"Windows_XP" : {
+			"SetupRuntime_XP" : "False"
+		}
+	},
+	"AppBuilderManager" : {
+		"savelogininfo" : "False",
+		"keeplogin" : "True",
+		"setupruntime_version" : "21.0.0.1100",
+		"merge" : "true",
+		"compress" : "true",
+		"baselib" : [
+			"./nexacrolib/framework/Framework.json",
+			"./nexacrolib/resources/Resource.json",
+			"./nexacrolib/component/CompBase.json",
+			"./nexacrolib/component/ComComp.json",
+			"./nexacrolib/component/Grid.json",
+			"./nexacrolib/component/DeviceAPI.json",
+			"./nexacrolib/component/ListView.json",
+			"./nexacrolib/component/ExtJs.json",
+			"./nexacrolib/component/rMateChartH5.json",
+			"./nexacrolib/component/UbiReport4.json",
+			"./nexacrolib/component/extlib::Splitter.json",
+			"./nexacrolib/component/extlib::ActionAsset.json",
+			"./nexacrolib/component/Push.json",
+			"./nexacrolib/component/History.json",
+			"./nexacrolib/component/ExtTest.json",
+			"./nexacrolib/component/ExtMoment.json"
+		]
+	}
+}

@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form01" width="1038" height="560" titletext="New Form" ontimer="Form01_ontimer">
+    <Layouts>
+      <Layout height="560" mobileorientation="landscape" width="1038">
+        <Button id="btn00" taborder="0" text="1_1" left="13" top="38" width="99" height="32" onclick="btn00_onclick"/>
+        <Static id="sta00" taborder="1" text="폼에 생성되어 있는 오브젝트/컴포넌트 정보를 구하기" left="127" top="38" width="374" height="40"/>
+        <Button id="btn01" taborder="2" text="1_2" left="12" top="93" width="104" height="27" onclick="btn01_onclick"/>
+        <Static id="sta01" taborder="3" text="컴포넌트ID String 값을 오브젝트로 만들기" left="128" top="90" width="339" height="33"/>
+        <Div id="div00" taborder="4" text="div00" left="630" top="13" width="400" height="271">
+          <Layouts>
+            <Layout>
+              <Grid id="grd00" taborder="0" left="31" top="23" width="339" height="149"/>
+              <Button id="btn00" taborder="1" text="btn00" left="30" top="183" width="188" height="32" onclick="div00_btn00_onclick"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Grid id="grd00" taborder="5" left="131" top="130" width="279" height="64"/>
+        <Button id="btn02" taborder="6" text="showModal" left="30" top="310" width="115" height="58" onclick="btn02_onclick"/>
+        <Button id="btn03" taborder="7" text="open" left="33" top="380" width="114" height="46" onclick="btn03_onclick"/>
+        <Static id="Static01" taborder="8" text="Param1" left="40" top="240" width="63" height="30" positionstep="0"/>
+        <Edit id="edt_name" taborder="9" left="111" top="240" width="180" height="30" value="Nexacro" positionstep="0" text="Nexacro"/>
+        <Button id="btn04" taborder="10" text="timer" left="33" top="433" width="112" height="40" onclick="btn04_onclick"/>
+        <Button id="btn05" taborder="11" text="killTimer" left="33" top="483" width="114" height="39" onclick="btn05_onclick"/>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <Dataset id="ds00">
+        <ColumnInfo>
+          <Column id="Column0" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="Column0">11111</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="ds01"/>
+      <Dataset id="ds02"/>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+// 	var arrObj = this.all;
+// 	for(var i=0;i<arrObj.length; i++)
+// 	{
+// 		trace(arrObj[i] + ":" + arrObj[i].id);
+// 	}
+
+
+	this.fn_compList(this); 
+};
+
+this.fn_compList = function(pObj)
+{
+//	var arrObj = pObj.all;
+//	var arrObj = pObj.components;
+	var arrObj = pObj.objects;
+
+	for(var i=0; i<arrObj.length; i++)
+	{
+		trace(pObj.parent + " : " + pObj.valueOf() + " : " + arrObj[i] + " : " + arrObj[i].name);
+
+		var sType = arrObj[i].valueOf();
+		if(sType == "[object Div]"){
+			this.fn_compList(arrObj[i].form);
+		}		
+		else if(sType == "[object Tab]"){
+			for(var j=0; j<arrObj[i].tabpages.length; j++){
+				//trace( arrObj[i].valueOf() + " : " + arrObj[i].tabpages[j].name);
+				this.fn_compList(arrObj[i].tabpages[j].form);
+			}
+		}
+	}
+}
+
+this.btn01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sGridId = this.grd00.name;
+	trace(sGridId + ":" + typeof sGridId);
+	
+	//var objGrid = this.components[sGridId];
+	//var objGrid = this.objects[sGridId];
+	var objGrid = this.all[sGridId];
+	trace(objGrid + ":" + typeof objGrid);
+};   
+
+//  쇼모달 
+this.btn02_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var objChildFrame = new ChildFrame();
+	objChildFrame.init("chf_popup1"
+	                  , 0 //vleft
+					  , 0 // vtop
+					  , 400 // 넓이 
+					  , 400 // 높이
+					  , null
+					  , null
+					  , "EduBasic::User\\Form01_sub.xfdl");
+
+	objChildFrame.set_openalign("center middle");
+	objChildFrame.set_overlaycolor("RGBA(196,196,196,0.5)") // 컬러값 
+	objChildFrame.set_dragmovetype("all");
+		
+
+	var objParam = { param1:this.edt_name.value,
+					 param2:this.ds00};
+				   
+	objChildFrame.showModal( this.getOwnerFrame() // 현재 자신의 폼에 
+	                       , objParam // 파라미터 전달 
+						   , this // 폼에대한 정보 넘겨주고 
+						   , "fn_popupCallback");	// 값을 전달받기위한 callback 
+};
+
+this.fn_popupCallback = function(strPopupID, strReturn)
+{
+	if(strReturn == undefined){
+		return;
+	}
+
+	if(strPopupID == "chf_popup1"){
+		var arrRtn = strReturn.split(":");
+		this.edt_name.set_value(arrRtn[0]);
+		trace(arrRtn[0]  + arrRtn[1]);
+	}
+};
+
+//open
+this.btn03_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var nW = 400;
+	var nH = 400;
+
+	var objApp = nexacro.getApplication();
+	var nLeft = (objApp.mainframe.width  / 2) - Math.round(nW / 2);
+	var nTop  = (objApp.mainframe.height / 2) - Math.round(nH / 2) ;		
+
+	nLeft = system.clientToScreenX(this, nLeft);
+	nTop  = system.clientToScreenY(this, nTop);
+	
+	var sOpenStyle = "showtitlebar=true showstatusbar=false "
+	               + "resizable=true autosize=true titletext=Modeless Popup"; // 브라우저 띄울떄 사용하는 오픈스타일 
+
+	var objParam = { param1:this.edt_name.value,
+					 param2:this.ds00};
+
+	//띄울 떄 
+	nexacro.open("chf_popup2" 
+	           , "EduBasic::User\\Form01_sub.xfdl" // 서브 디렉토리라서 역슬래시, 서브디렉토리가 없다면 :: 식으로 표현 
+			   , this.getOwnerFrame()
+			   , objParam // 파라미터 
+			   , sOpenStyle // 스타일 
+			   , nLeft
+			   , nTop
+			   , nW
+			   , nH
+			   , this);
+};
+ 
+
+this.fn_return = function(objDs)
+{
+	this.ds02.copyData(objDs) //데이터 타입만 복사 
+	trace(this.ds02.saveXML());
+}
+
+//타이머 
+this.btn04_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.setTimer(1, 1000); // 1초에 한번씩 이벤트를 실행시키겠다. 1000-> 1초, 10초 --> 만 
+	
+};
+
+this.Form01_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
+{
+	if(e.timerid == 1)  // 타이머 아이디가 1이라고 생각하면 된다. 
+	{
+		//this.killTimer(1); // 여기서해주게되면 한번만 해주고 끝난다. 
+		trace("event");
+	}
+};
+
+//타이머 종료 
+this.btn05_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.killTimer(1); //이벤트 아이디 1번 지정 
+};
+]]></Script>
+  </Form>
+</FDL>

@@ -1,0 +1,10 @@
+{
+	"name": "Extapi",
+	"version": "1.0.0.0",
+	"description": "Library",
+	"license": "",
+	"scripts": [
+        "moment/moment.js"
+	
+   	]
+}

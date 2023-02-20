@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="XPush_Popup" width="400" height="450" titletext="New Form" onload="XPush_Popup_onload" onclose="XPush_Popup_onclose">
+    <Layouts>
+      <Layout height="450" mobileorientation="landscape" width="400">
+        <Grid id="grd00" taborder="0" left="20" top="13" width="320" height="267" binddataset="dsMessage">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="TOPIC_ID"/>
+                <Cell col="1" text="TOPIC_TYPE"/>
+                <Cell col="2" text="CODE"/>
+                <Cell col="3" text="MSG"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:TOPIC_ID"/>
+                <Cell col="1" text="bind:TOPIC_TYPE"/>
+                <Cell col="2" text="bind:CODE"/>
+                <Cell col="3" text="bind:MSG"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <TextArea id="taLog" taborder="1" left="20" top="290" width="320" height="114"/>
+      </Layout>
+    </Layouts>
+    <Objects/>
+    <Script type="xscript5.1"><![CDATA[
+this.XPush_Popup_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	var objParamDs = this.parent.param1; // 부모에서 param1로 데이터를 가져와서 
+	this.grd00.set_binddataset(objParamDs); // 그리드에 파람을 바인드해줌. 
+};
+
+this.XPush_Popup_onclose = function(obj:nexacro.Form,e:nexacro.CloseEventInfo)
+{
+	this.closePopup();
+};
+]]></Script>
+    <Bind>
+      <BindItem id="item0" compid="taLog" propid="value" datasetid="dsMessage" columnid="MSG"/>
+    </Bind>
+  </Form>
+</FDL>

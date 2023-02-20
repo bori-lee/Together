@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edupack.edu.service.mapper.BoardMapper">
+
+ <resultMap id="boardSelectMap" type="board">
+	<result property="boardNo"         column="board_no"       		jdbcType="INTEGER"/>
+	<result property="boardId"         column="board_id"        	jdbcType="INTEGER"/>
+	<result property="classNo"         column="class_no"         	jdbcType="INTEGER"/>
+	<result property="userId"          column="user_id"         	jdbcType="VARCHAR"/>
+    <result property="title"     	   column="title"  				jdbcType="VARCHAR"/>
+	<result property="content"         column="content"             jdbcType="VARCHAR"/>
+	<result property="regDate"         column="reg_date"            jdbcType="VARCHAR"/>
+</resultMap>
+
+ <resultMap id="commentSelectMap" type="comment">
+	<result property="commentNo"         column="comment_no"       	jdbcType="INTEGER"/>
+	<result property="boardNo"        	 column="board_no"        	jdbcType="INTEGER"/>
+	<result property="content"         	 column="content"         	jdbcType="VARCHAR"/>
+	<result property="userId"          	 column="user_id"         	jdbcType="VARCHAR"/>
+    <result property="regDate"     	   	 column="reg_date"  		jdbcType="VARCHAR"/>
+</resultMap>
+
+
+	<!-- SQL :: 게시판 조회 -->
+	<select    id="getBoard"   parameterType="map"   resultType="map">
+	SELECT u.nick, ifnull(u.profile_img,'profile.png') AS profile_img, b.title, b.content, b.reg_date, b.board_no, j.status, b.board_id, c.class_no
+	FROM user u, board b, class c, join_class j 
+	WHERE u.user_id = b.user_id
+	AND u.user_id = j.user_id
+	AND c.class_no = b.class_no 
+	AND c.class_no = j.class_no
+	AND c.class_no = #{class_no}
+	AND b.board_id = #{board_id}
+	GROUP BY b.board_no
+	ORDER BY b.reg_date desc
+    </select>
+	 
+	 <!-- SQL :: 게시판 등록-->
+    <insert    id="addBoard"      parameterType="board" >
+      INSERT
+      INTO board (board_no, board_id, class_no, user_id, title, content, reg_date)
+      VALUES    (   #{boardNo : INTEGER},
+      			    #{boardId : INTEGER},
+      			    #{classNo : INTEGER},
+      			    #{userId : VARCHAR},
+      			    #{title : VARCHAR},
+      			    #{content : VARCHAR},
+     			    SYSDATE()   
+      			  )
+    </insert>
+    
+    <!-- SQL :: 게시판 작성 시 모임의 회원인지 확인  -->
+    <select    id="checkUserClass" parameterType="map"   resultType="integer">
+	SELECT COUNT(*) user_id FROM join_class 
+	WHERE class_no = #{classNo}
+	AND user_id = #{userId}
+	 </select>
+
+
+    <!-- SQL :: 게시판 상세보기(모달)  -->
+    <select id = "getDetailBoard"  parameterType="Integer"   resultType="map">
+    SELECT u.nick, b.board_id, b.title, b.class_no, b.content, b.reg_date, b.board_no, b.user_id
+	FROM user u, board b 
+	WHERE u.user_id = b.user_id 
+	AND b.board_no = #{boardNo}
+    </select>
+	
+	
+	<!-- SQL :: 게시판 수정  -->
+	<update id="updateBoard" parameterType="map">
+		UPDATE board 
+		<set> 
+		title = #{title}, 
+		content = #{content} 
+		</set>
+		WHERE board_no = #{board_no}
+	</update>
+	
+	<!-- SQL :: 게시판 삭제  -->
+	 <delete id="deleteBoard" parameterType="int">
+	  DELETE FROM board 
+	  WHERE board_no =  #{board_no}
+	</delete>
+	
+	
+	<!-- SQL :: 댓글 보기(모달)  -->
+	<select id = "getComment"  parameterType="Integer"   resultType="map">
+	SELECT u.nick, u.user_id, ifnull(u.profile_img,'profile.png') AS profile_img, c.content, c.reg_date, c.user_id, c.comment_no, c.board_no, j.status
+	FROM  user u, comment c, join_class j  
+	WHERE u.user_id = c.user_id
+	AND j.user_id = c.user_id
+	AND c.board_no = #{boardNo}
+	GROUP BY c.COMMENT_NO
+	ORDER BY c.reg_date DESC
+     </select>
+	
+	
+	<!-- 댓글 등록  -->
+	<insert    id="addComment"      parameterType="map" >
+      INSERT
+      INTO comment(COMMENT_NO, BOARD_NO, CONTENT, USER_ID, REG_DATE)
+      VALUES    (    NULL,
+      			    #{board_no},
+      			    #{content},
+      			    #{user_id},
+     			    SYSDATE()   
+      			  )
+    </insert>
+    
+  
+    <!-- 댓글 수정  -->
+    <update id="updateComment" parameterType="map">
+		UPDATE comment 
+		<set> 
+		content = #{content} 
+		</set>
+		WHERE comment_no = #{comment_no}
+	</update>
+ 
+    
+    <!-- 댓글 삭제 -->
+     <delete id="deleteComment" parameterType="int">
+	  DELETE FROM comment
+	  WHERE comment_no =  #{comment_no}
+	</delete>
+  
+	
+	
+	
+	
+	
+</mapper>

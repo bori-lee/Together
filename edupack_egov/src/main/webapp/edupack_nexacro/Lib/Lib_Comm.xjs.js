@@ -1,0 +1,136 @@
+//XJS=Lib_Comm.xjs
+(function()
+{
+    return function(path)
+    {
+        var obj;
+    
+        // User Script
+        this.registerScript(path, function() {
+        //메세지처리.. alert이냐 confirm 이냐...
+        this.lfn_alert = function(sMsgId, arrWord)
+        {
+        	var objApp = nexacro.getApplication(); // 글로벌 데이터셋 가져오는 메소드
+        	var sMsgType = objApp.gdsMessage.lookup("MSG_ID", sMsgId, "MSG_TYPE"); // A,C 넘어옴 ALERT, CONFIRM
+        	var sMsg = this.lfn_getMsg(sMsgId, arrWord);
+
+        	if(sMsgType == "A")
+        	{
+        		this.alert(sMsg);
+        	} else if(sMsgType == "C")
+        	{
+        		//this.confirm(sMsg); 이렇게 쓰면 안됨
+        		return this.confirm(sMsg);
+        	}
+        }
+
+
+        //메세지 출력
+        this.lfn_getMsg = function(sMsgId, arrWord)
+        {
+        	var objApp = nexacro.getApplication(); // 글로벌 데이터셋 가져오는 메소드
+        	sMsg = objApp.gdsMessage.lookup("MSG_ID", sMsgId, "MSG_TEXT"); // 인수로 전달된 오브젝트를 Form 영역부터 상위 영역으로 검색하여 반환하는 메소드입니다.
+        	if(!this.lfn_isNull(arrWord)) //치환할 값이 있는지 체크
+        	{
+
+        		for(var i=0; i<arrWord.length; i++)
+        		{
+        			var sIdx = "{" + i.toString() + "}"; //{0}, {1}, {2}....문자열반환
+        			sMsg = sMsg.replace(sIdx, arrWord[i]);
+        		}
+        	}
+        	trace(sIdx);
+        	return sMsg;
+        	}
+
+
+        // 트랜잭션도 함수화...
+        this.lfn_transaction = function(sId, sUrl, inData, outData, sArg, sCallBack, isAsync)
+        {
+        	if (this.lfn_isNull(sCallBack)) sCallBack = "fn_callback";
+
+        	if ((isAsync != true) && (isAsync != false)) isAsync = true; // 디폴트값
+
+            var sSvcId  = sId + ":" + sCallBack;
+        	var sSvcUrl = sUrl;
+
+        	if (this.lfn_isNull(sArg)) {
+        		sArg = "";
+        	}
+
+            sArg += " pTitle="+nexacro.wrapQuote(this.titletext) + " pName="+this.name
+        	var nDataType = 0;
+
+            trace(sSvcId + " : " + sSvcUrl + " : " + inData + " : " + outData + " : " + sArg + " : " + isAsync + " : " + nDataType);
+
+        	this.transaction( sSvcId
+        					, sSvcUrl
+        					, inData
+        					, outData
+        					, sArg
+        					, "lfn_callback"
+        					, isAsync
+        					, nDataType
+        					, false);
+        };
+
+
+        this.lfn_callback = function(svcID, errorCode, errorMsg)
+        {
+        	var sSvcId    = svcID.split(":")[0];
+            var sCallback = svcID.split(":")[1];
+
+        	// 에러 공통 처리
+        	if(errorCode != 0){
+        		this.alert("error");
+                return;
+        	}
+
+        	// form에 callback 함수가 있을때
+        	if (this[sCallback]) {
+                this.lookupFunc(sCallback).call(sSvcId, errorCode, errorMsg);
+            }
+        };
+
+        this.lfn_openPopup = function(sPopupType, sPopupId, nLeft, nTop, nWidth, nHeight, nRight, nBottom, sUrl, oArg, sPopupCallback)
+        {
+            if(sPopupType == "modal"){
+        		newChild = new nexacro.ChildFrame;
+        		newChild.init(sPopupId, nLeft, nTop, nWidth, nHeight, nRight, nBottom, sUrl);
+
+        		newChild.set_dragmovetype("all");
+        		newChild.set_openalign("center middle");
+        		newChild.set_overlaycolor("RGBA(0, 0, 0, 0.2)");
+        		newChild.showModal(this.getOwnerFrame(), oArg, this, sPopupCallback);
+            }
+            else if(sPopupType == "modeless"){
+                var sOpenStyle= "showtitlebar=true showstatusbar=false showontaskbar=true showcascadetitletext=false resizable=true autosize=true titletext=modeless";
+                var objApp = nexacro.getApplication();
+
+                nLeft = (objApp.mainframe.width  / 2) - Math.round(nWidth / 2);
+                nTop  = (objApp.mainframe.height / 2) - Math.round(nHeight / 2) ;
+                nLeft = system.clientToScreenX(this, nLeft);
+                nTop  = system.clientToScreenY(this, nTop);
+
+        		var arrPopFrame = nexacro.getPopupFrames();
+        		if (arrPopFrame[sPopupId]) {
+        			if (system.navigatorname == "nexacro") {
+        				arrPopFrame[sPopupId].setFocus();
+        			}
+                    else {
+        				arrPopFrame[sPopupId]._getWindowHandle().focus();
+        			}
+        		}
+        		else {
+        			nexacro.open(sPopupId, sUrl, this.getOwnerFrame(), oArg, sOpenStyle, nLeft, nTop, nWidth, nHeight, this);
+        		}
+            }
+        };
+        });
+    
+        this.loadIncludeScript(path);
+        
+        obj = null;
+    };
+}
+)();

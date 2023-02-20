@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="DivSample01" width="1280" height="720" titletext="New Form">
+    <Layouts>
+      <Layout height="720" mobileorientation="landscape" width="1280">
+        <Div id="div00" taborder="0" text="div00" left="36" top="37" width="416" height="207" background="aquamarine">
+          <Layouts>
+            <Layout>
+              <Button id="btn00" taborder="0" text="btn00" left="18" top="19" width="158" height="61"/>
+              <Button id="btn01" taborder="1" text="btn01" left="24" top="99" width="157" height="48"/>
+              <Button id="btn02" taborder="2" text="btn02" left="26" top="167" width="160" height="34"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Div id="div01" taborder="1" text="div01" left="546" top="50" width="308" height="206" url="Cmm::CmmAlert.xfdl"/>
+        <Tab id="tab00" taborder="2" tabindex="0" left="44" top="370" width="381" height="248">
+          <Tabpages>
+            <Tabpage id="Tabpage1" text="Tabpage1">
+              <Layouts>
+                <Layout>
+                  <Button id="btn00" taborder="0" text="btn00" left="44" top="24" width="179" height="72"/>
+                  <Combo id="cbo00" taborder="1" text="cbo00" left="57" top="119" width="178" height="57"/>
+                  <MaskEdit id="msk00" taborder="2" left="275" top="21" width="68" height="83"/>
+                </Layout>
+              </Layouts>
+            </Tabpage>
+            <Tabpage id="Tabpage2" text="Tabpage2">
+              <Layouts>
+                <Layout>
+                  <Button id="btn00" taborder="0" text="btn00" left="15" top="8" width="162" height="68"/>
+                  <Edit id="edt00" taborder="1" left="21" top="99" width="163" height="39"/>
+                </Layout>
+              </Layouts>
+            </Tabpage>
+          </Tabpages>
+        </Tab>
+        <Tab id="tab01" taborder="3" tabindex="0" left="523" top="389" width="315" height="223" preload="false">
+          <Tabpages>
+            <Tabpage id="Tabpage1" text="Tabpage1" url="Cmm::CmmAlert.xfdl"/>
+            <Tabpage id="Tabpage2" text="Tabpage2" url="EduBasic::Comp/Comp_Dataset.xfdl"/>
+          </Tabpages>
+        </Tab>
+      </Layout>
+    </Layouts>
+  </Form>
+</FDL>

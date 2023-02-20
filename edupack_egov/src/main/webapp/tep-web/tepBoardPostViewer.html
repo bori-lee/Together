@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>te-portal</title>
+<script type="text/javascript">
+	if(!window.NEXACROHTML){
+		window.NEXACROHTML = {};
+	}
+	if(window.NEXACROWEBBROWSER){
+		window.NEXACROWEBBROWSER.on_fire_onusernotify(window.NEXACROWEBBROWSER, "onload_NEXACROWEBBROWSER");
+	}
+	else if(window.nexacro){
+		window.nexacro.fireUserNotify("onload_nexacro");			
+	}
+	else{
+		window.document.title = "onload";
+	}
+
+	function fnSetHtml(sHtml)
+	{
+		sHtml = decodeURIComponent(sHtml);	
+		var element = document.body;
+//		var element = document.getElementById("contents");
+		 element.innerHTML = sHtml;
+	}
+</script>
+</head>
+<body contextmenu="return false">
+</body>
+</html>
