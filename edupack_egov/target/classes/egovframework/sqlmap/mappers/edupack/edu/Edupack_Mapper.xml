@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edupack.edu.service.mapper.EdupackMapper">
+
+	<select id="selectEmpListAll" resultType="map">
+		SELECT EMPL_ID, FULL_NAME, DEPT_CD, POS_CD, HIRE_DATE, 
+			   SALARY, GENDER, MARRIED, MEMO
+		FROM TB_EMP
+	</select>
+	
+	<select id="selectEmpListParam1" parameterType = "String" resultType="map">
+		SELECT EMPL_ID, FULL_NAME, DEPT_CD, POS_CD, HIRE_DATE, 
+			   SALARY, GENDER, MARRIED, MEMO
+		FROM TB_EMP
+		
+		<if test = "pDept !=null and pDept != '' and pDept != 'undefined'">
+		WHERE DEPT_CD = #{pDept}
+		</if>
+		
+	</select>
+	
+	<select id="selectEmpListParam2" parameterType = "map" resultType="map">
+		SELECT EMPL_ID, FULL_NAME, DEPT_CD, POS_CD, HIRE_DATE, 
+			   SALARY, GENDER, MARRIED, MEMO
+		FROM TB_EMP
+		WHERE 1=1 <!-- 참인결과 -->
+		<if test = "pDept !=null and pDept != '' and pDept != 'undefined'">
+		AND DEPT_CD = #{pDept} 
+		</if>
+		<if test = "pName !=null and pName != '' and pName != 'undefined'">
+		AND FULL_NAME LIKE CONCAT('%', #{pName}, '%')
+		</if>
+	</select>
+	
+	<select id="selectEmpListDs" parameterType = "map" resultType="map">
+		SELECT EMPL_ID, FULL_NAME, DEPT_CD, POS_CD, HIRE_DATE, 
+			   SALARY, GENDER, MARRIED, MEMO
+		FROM TB_EMP
+		WHERE 1=1
+		<if test = "S_DEPT !=null and S_DEPT != '' and S_DEPT != 'undefined'">
+		AND DEPT_CD = #{S_DEPT} 
+		</if>
+		<if test = "S_NAME !=null and S_NAME != '' and S_NAME != 'undefined'">
+		AND FULL_NAME LIKE CONCAT('%', #{S_NAME}, '%')
+		</if>
+	</select>
+	
+
+	<select id="selectEmpListDes" resultType="map">
+		SELECT DEPT_CD, DEPT_NAME
+		FROM TB_DEPT
+	</select>
+	
+	<select id="selectEmpListPos" resultType="map">
+		SELECT POS_CD, POS_NAME
+		FROM TB_POS
+	</select>
+	
+	<select id="selectCommonCode" parameterType = "map" resultType="map">
+		SELECT *
+		FROM TB_COMCODE 
+		WHERE GROUP_CODE IN 
+		 <foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach> 
+	</select>
+	
+	<insert id = "insertEmpData" parameterType = "map">
+	INSERT INTO TB_EMP 
+				(EMPL_ID, FULL_NAME, DEPT_CD, POS_CD, HIRE_DATE, SALARY, GENDER, MARRIED, MEMO)
+			VALUES
+				( #{EMPL_ID}
+				, #{FULL_NAME}
+				, #{DEPT_CD}
+				, #{POS_CD}
+				, #{HIRE_DATE}
+				, #{SALARY}
+				, #{GENDER}
+				, #{MARRIED}
+				, #{MEMO})
+	</insert>
+	
+	<update id="updateEmpData" parameterType="map">
+		UPDATE TB_EMP 
+		SET   EMPL_ID 	= #{EMPL_ID}
+			, FULL_NAME = #{FULL_NAME}
+			, DEPT_CD	= #{DEPT_CD}
+			, POS_CD	= #{POS_CD}
+			, HIRE_DATE = #{HIRE_DATE}
+			, SALARY 	= #{SALARY}
+			, GENDER 	= #{GENDER} 
+			, MARRIED 	= #{MARRIED}
+			, MEMO 		= #{MEMO}
+		WHERE EMPL_ID	= #{ORG_EMPL_ID}
+		</update>
+	
+	<delete id="deleteEmpData" parameterType="map">
+		DELETE FROM TB_EMP 
+		WHERE EMPL_ID = #{EMPL_ID}
+		</delete>
+	
+	
+	<select id="checkEmpID" parameterType = "String" resultType="int">
+		SELECT COUNT(*) 
+		FROM TB_EMP
+		WHERE EMPL_ID = #{pID}
+	</select>
+	
+	
+	<!-- 페이징조회 -->
+	<select id="selectPagingSample" parameterType="map" resultType="map">
+			SELECT b.*
+			FROM 
+			 (SELECT @rownum:=@rownum+1 AS rownum,
+			   a.*
+			  FROM(SELECT *
+			    FROM tb_emp
+			    ) a, 
+			 (SELECT @rownum:=0) AS temp) b 
+			 where rownum limit #{records} offset #{recordsOffset}
+	</select>
+	
+	<select id="selectPagingSampleTotalcnt" parameterType="map" resultType="map"> <!-- 리절트타입 인트로 사용 가능  -->
+		select count(*) as totalCount
+		  from TB_EMP
+	</select>	
+	
+	
+	
+	
+	
+	
+</mapper>
