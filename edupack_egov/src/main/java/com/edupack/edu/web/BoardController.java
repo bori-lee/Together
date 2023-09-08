@@ -54,7 +54,7 @@ import com.nexacro.uiadapter.spring.core.data.NexacroResult;
 
 public class BoardController {
 	
-	//230908 git test 
+	//230908 git test 222
 	
 	private Logger log = LoggerFactory.getLogger(BoardController.class);
 	
