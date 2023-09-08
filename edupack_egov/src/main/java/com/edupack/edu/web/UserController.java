@@ -74,6 +74,8 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
 
+// 230908 git test 
+
 public class UserController {
 	
 	private Logger log = LoggerFactory.getLogger(UserController.class);
